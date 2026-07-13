@@ -176,12 +176,3 @@ UPDATE products SET image_url = 'https://images.unsplash.com/photo-1574316071802
 UPDATE products SET image_url = 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=300&q=80' WHERE category = 'Household';
 UPDATE products SET image_url = 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=300&q=80' WHERE category = 'Personal Care';
 UPDATE products SET image_url = 'https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=300&q=80' WHERE category = 'Spices';
-
--- ===== RESET SEQUENCES =====
--- When inserting with explicit IDs, PostgreSQL's identity sequences don't advance.
--- This resets them to max(id)+1 so that new inserts don't collide with seeded data.
-SELECT setval(pg_get_serial_sequence('products', 'id'), COALESCE(MAX(id), 1)) FROM products;
-SELECT setval(pg_get_serial_sequence('shopping_lists', 'id'), COALESCE(MAX(id), 1)) FROM shopping_lists;
-SELECT setval(pg_get_serial_sequence('list_items', 'id'), COALESCE(MAX(id), 1)) FROM list_items;
-SELECT setval(pg_get_serial_sequence('purchase_history', 'id'), COALESCE(MAX(id), 1)) FROM purchase_history;
-
