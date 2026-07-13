@@ -160,7 +160,7 @@ INSERT IGNORE INTO products (id, name, category, brand, price, size, is_seasonal
 (122, 'Pickle (Mango)', 'Spices', 'Mothers Recipe', 95.00, '300g', true, true, null);
 
 -- ===== DEFAULT SHOPPING LIST =====
-INSERT INTO shopping_lists (id, name, is_active, created_at, updated_at) VALUES
+INSERT IGNORE INTO shopping_lists (id, name, is_active, created_at, updated_at) VALUES
 (1, 'My Shopping List', true, NOW(), NOW());
 
 -- ===== POPULATE PRODUCT IMAGES =====
