@@ -36,19 +36,9 @@ public class VoiceCommandService {
     @Value("${groq.api.translation-model:llama-3.1-8b-instant}")
     private String translationModel;
 
-    // ──────────────────────────────────────────────────────────────────────
+   
     // Step 1: LLM-based translation — converts ANY language to English
-    // ──────────────────────────────────────────────────────────────────────
-
-    /**
-     * Uses a fast, lightweight LLM to translate the user's voice command
-     * from any language (Hindi, Marathi, Tamil, mixed Hinglish, etc.)
-     * into clean English. This replaces the old PRODUCT_ALIASES map.
-     *
-     * <p>If the translation call fails (rate limit, timeout, etc.), it
-     * gracefully falls back to the original text — the main intent-parsing
-     * LLM still has some multilingual understanding.</p>
-     */
+   
     private String translateToEnglish(String text) {
         if (text == null || text.isBlank()) {
             return text;
@@ -94,7 +84,7 @@ public class VoiceCommandService {
 
             if (response != null && response.getChoices() != null && !response.getChoices().isEmpty()) {
                 String translated = response.getChoices().get(0).getMessage().getContent().trim();
-                // Strip any quotes the LLM may have wrapped around the output
+              
                 if (translated.startsWith("\"") && translated.endsWith("\"")) {
                     translated = translated.substring(1, translated.length() - 1);
                 }
@@ -105,13 +95,11 @@ public class VoiceCommandService {
             log.warn("Translation step failed, falling back to original text. Error: {}", e.getMessage());
         }
 
-        // Graceful fallback: return original text
+       
         return text;
     }
 
-    // ──────────────────────────────────────────────────────────────────────
-    // Context builders
-    // ──────────────────────────────────────────────────────────────────────
+   
 
     private String getCatalogContext() {
         List<com.example.voice.commanding.model.Product> products = productRepository.findAll();
@@ -169,9 +157,9 @@ public class VoiceCommandService {
         return sb.toString();
     }
 
-    // ──────────────────────────────────────────────────────────────────────
+   
     // Step 2: Main command processing
-    // ──────────────────────────────────────────────────────────────────────
+  
 
     @Transactional
     public VoiceCommandResponse processCommand(VoiceCommandRequest request) {
@@ -295,9 +283,9 @@ public class VoiceCommandService {
         return executeIntent(intent, request.getListId(), userLanguage);
     }
 
-    // ──────────────────────────────────────────────────────────────────────
+ 
     // Intent execution
-    // ──────────────────────────────────────────────────────────────────────
+    
 
     private VoiceCommandResponse executeIntent(VoiceCommandIntent intent, Long listId, String userLanguage) {
         List<SuggestionDTO> extraSuggestions = new java.util.ArrayList<>();
@@ -363,7 +351,7 @@ public class VoiceCommandService {
                     shoppingListService.addItem(listId, dto);
                 }
             }
-            // Flush add operations immediately so subsequent queries see them
+           
             entityManager.flush();
         }
 
@@ -409,8 +397,7 @@ public class VoiceCommandService {
             }
         }
 
-        // Flush pending DB changes and clear Hibernate first-level cache
-        // to ensure the subsequent query returns accurate post-mutation data
+      
         entityManager.flush();
         entityManager.clear();
 
@@ -463,8 +450,6 @@ public class VoiceCommandService {
                 .anyMatch(item -> item.getItemName().equalsIgnoreCase(suggestion.getName())));
 
         // If all items were successfully added (no customMessage), remove any substitute
-        // suggestions the LLM may have hallucinated — those would falsely trigger the
-        // "Item Unavailable" modal on the frontend.
         boolean hasUnavailableItems = customMessage.length() > 0;
         if (!hasUnavailableItems) {
             finalSuggestions.removeIf(s -> "substitute".equalsIgnoreCase(s.getType()));
@@ -481,9 +466,9 @@ public class VoiceCommandService {
                 .build();
     }
 
-    // ──────────────────────────────────────────────────────────────────────
+ 
     // Product matching utilities (no more alias maps — input is pre-translated)
-    // ──────────────────────────────────────────────────────────────────────
+  
 
     private Optional<com.example.voice.commanding.model.Product> findBestProductMatch(
             List<com.example.voice.commanding.model.Product> products, String requestedName) {

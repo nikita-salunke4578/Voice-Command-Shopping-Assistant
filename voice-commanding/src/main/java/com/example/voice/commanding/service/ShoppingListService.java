@@ -70,7 +70,7 @@ public class ShoppingListService {
         shoppingListRepository.deleteById(id);
     }
 
-    // ==================== LIST ITEM CRUD ====================
+    
 
     @Transactional
     public ListItemDTO addItem(Long listId, ListItemDTO itemDTO) {
@@ -203,7 +203,7 @@ public class ShoppingListService {
                 .collect(Collectors.toList());
     }
 
-    // ==================== DTO MAPPERS ====================
+    //dto mapper
 
     public ShoppingListDTO toDTO(ShoppingList list) {
         List<ListItemDTO> itemDTOs = list.getItems() != null
