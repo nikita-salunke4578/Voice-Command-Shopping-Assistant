@@ -190,8 +190,9 @@ erDiagram
         timestamp last_purchased
     }
 
-    SHOPPING_LISTS ||--o{ LIST_ITEMS : "contains"
-    PRODUCTS ||--o{ LIST_ITEMS : "references"
+    SHOPPING_LISTS ||--o{ LIST_ITEMS : "has many"
+    PRODUCTS ||--o{ LIST_ITEMS : "can appear in many"
+    PURCHASE_HISTORY }o--o| PRODUCTS : "tracks"
 ```
 
 ### Table Descriptions
@@ -298,10 +299,10 @@ The **Web Speech API** is used on the frontend for real-time speech-to-text. It 
 │  Speaks  │     │ STT (Speech  │     │ Receives     │     │ Step 1:      │
 │  into    │     │ to Text)     │     │ text +       │     │ Translate    │
 │  Mic     │     │              │     │ language     │     │ to English   │
-└──────────┘     └──────────────┘     └──────┬───────┘     └──────┬───────┘
-                                             │                     │
-                                             │                     ▼
-┌──────────┐     ┌──────────────┐     ┌──────▼───────┐     ┌──────────────┐
+└──────────┘     └──────────────┘     └──────────────┘     └──────┬───────┘
+                                                                  │
+                                                                  ▼
+┌──────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
 │  8. UI   │◄────│ 7. Frontend  │◄────│ 6. Execute   │◄────│ 5. Groq LLM  │
 │  Updates │     │ Zustand      │     │ DB mutations │     │ Step 2:      │
 │  with    │     │ store        │     │ (add/remove/ │     │ Parse intent │
