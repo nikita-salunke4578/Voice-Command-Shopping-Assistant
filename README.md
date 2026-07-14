@@ -23,17 +23,18 @@
 ## 📋 Table of Contents
 
 1. [Project Overview](#-project-overview)
-2. [Features](#-features)
-3. [Demo](#-demo)
-4. [Architecture](#-architecture)
-5. [Database Design](#-database-design)
-6. [Technology Stack](#-technology-stack)
-7. [AI Services Used](#-ai-services-used)
-8. [Application Flow](#-application-flow)
-9. [Project Structure](#-project-structure)
-10. [Installation](#-installation)
-11. [API Documentation](#-api-documentation)
-12. [Future Improvements](#-future-improvements)
+2. [Approach](#-approach)
+3. [Features](#-features)
+4. [Demo](#-demo)
+5. [Architecture](#-architecture)
+6. [Database Design](#-database-design)
+7. [Technology Stack](#-technology-stack)
+8. [AI Services Used](#-ai-services-used)
+9. [Application Flow](#-application-flow)
+10. [Project Structure](#-project-structure)
+11. [Installation](#-installation)
+12. [API Documentation](#-api-documentation)
+13. [Future Improvements](#-future-improvements)
 
 ---
 
@@ -46,6 +47,18 @@ Traditional shopping list apps require manual typing, are English-only, and offe
 - Accepting voice commands in **any language** (Hindi, Marathi, Tamil, Telugu, Kannada, Spanish, French, German, English)
 - Using **AI to understand intent** — not just keywords — so it handles typos, dialects, and mixed-language input
 - Providing **smart recommendations** based on purchase history, seasonal products, and complementary items
+
+---
+
+## 🎯 Approach
+
+The main challenge was handling voice commands in multiple Indian languages (Hindi, Marathi, Tamil, Hinglish) and converting them into structured shopping list actions. Instead of building a rigid keyword-based parser with hardcoded translations, I chose a **two-step LLM pipeline** — a fast 8B model for translation and a powerful 70B model for intent parsing. This approach handles mixed-language inputs, typos, and dialects without maintaining manual alias maps.
+
+I picked **Groq** over OpenAI because its Language Processing Unit (LPU) hardware offers sub-second inference, which is critical for a voice-driven UX where users expect instant feedback. The 70B model receives the full product catalog, current list, and purchase history as context enabling it to match fuzzy product names, suggest substitutes for unavailable items, and recommend frequently bought products.
+
+On the frontend, I used the browser's native **Web Speech API** for Speech-to-Text (STT) instead of a paid service to keep costs zero. **Zustand** was chosen over Redux for state management because of its minimal boilerplate.
+
+For product matching, I implemented a **scoring-based fuzzy matcher** with normalization and pluralization handling as a fallback, since relying solely on the LLM for exact catalog matches wasn't reliable enough.
 
 ---
 
